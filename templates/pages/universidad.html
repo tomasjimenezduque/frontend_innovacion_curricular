@@ -1,0 +1,127 @@
+{% extends 'layout/base.html' %}
+
+{% block titulo %}Universidades{% endblock %}
+
+{% block encabezado %}
+    <i class="fas fa-university"></i> Gestión de Universidades 
+{% endblock %}
+
+{% block contenido %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3><i class="fas fa-bars fa-sm"></i> Lista de Universidades</h3>
+        {% if not accion %}
+            <a href="{{ url_for('universidad.index', accion='nuevo') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nueva Universidad
+            </a>
+        {% endif %}
+    </div>
+
+    {% if accion %}
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-edit"></i> {{ "Modificar Universidad" if accion == 'editar' else "Registrar Nueva Universidad" }}
+                </h6>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{% if accion == 'nuevo' %}{{ url_for('universidad.crear') }}{% else %}{{ url_for('universidad.actualizar') }}{% endif %}">
+                    {% if accion == 'editar' %}
+                        <input type="hidden" name="id" value="{{ universidad_editar.id }}">
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-md-2 mb-3">
+                            <label class="form-label font-weight-bold">ID</label>
+                            <input type="number" name="id" class="form-control" 
+                                   value="{{ universidad_editar.id if universidad_editar else '' }}" 
+                                   {% if accion == 'editar' %}readonly{% endif %} required>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label font-weight-bold">Nombre</label>
+                            <input type="text" name="nombre" class="form-control" 
+                                   value="{{ universidad_editar.nombre if universidad_editar else '' }}" required>
+                        </div>
+                        
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label font-weight-bold">Ciudad</label>
+                            <input type="text" name="ciudad" class="form-control" 
+                                   value="{{ universidad_editar.ciudad if universidad_editar else '' }}" required>
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label font-weight-bold">Tipo</label>
+                            <input type="text" name="tipo" class="form-control" 
+                                   placeholder="Pública / Privada"
+                                   value="{{ universidad_editar.tipo if universidad_editar else '' }}" required>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Guardar Cambios
+                        </button>
+                        <a href="{{ url_for('universidad.index') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-table"></i> Registros en Base de Datos
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Ciudad</th>
+                            <th>Tipo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for uni in universidades %}
+                        <tr>
+                            <td>{{ uni.id }}</td>
+                            <td><strong>{{ uni.nombre }}</strong></td>
+                            <td>{{ uni.ciudad }}</td>
+                            <td>{{ uni.tipo }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{{ url_for('universidad.index', accion='editar', id=uni.id) }}" 
+                                       class="btn btn-sm btn-warning">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    
+                                    <form method="POST" action="{{ url_for('universidad.eliminar') }}" style="display:inline;">
+                                        <input type="hidden" name="id" value="{{ uni.id }}">
+                                        <button type="submit" class="btn btn-sm btn-danger" 
+                                                onclick="return confirm('¿Eliminar {{ uni.nombre }}?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">No hay universidades registradas.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
