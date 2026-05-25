@@ -24,7 +24,7 @@ En vez de memorizar cada número, lo guardas una vez y lo usas siempre.
 # Si la API estuviera en otro servidor, cambiarías esto a:
 #   API_BASE_URL = "http://192.168.1.100:8000"
 # ─────────────────────────────────────────────────────────────
-API_BASE_URL = "http://127.0.0.1:8000"
+API_BASE_URL = "https://apigenericafastapi-crud.onrender.com"
 
 # ─── Clave secreta de Flask ─────────────────────────────────
 # Flask necesita una clave secreta para:
