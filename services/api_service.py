@@ -1,11 +1,12 @@
 import requests
 import logging
+import os
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class ApiService:
-    BASE_URL = "http://127.0.0.1:8000/api"
+    BASE_URL = f"{os.getenv('API_BASE_URL', 'http://127.0.0.1:8000')}/api"
 
     def _construir_url(self, tabla, valor_id=None):
         recurso = tabla.strip('/')
